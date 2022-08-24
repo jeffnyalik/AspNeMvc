@@ -1,0 +1,98 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+@*<button type="button" id="btnModel" style="display:none" class="btn btn-primary" data-toggle="modal" data-target="#transactionModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Transaction</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="hidden" name="id" id="id" />
+                            <div class="form-group">
+                                <label for="Account">Account</label>
+                                <input type="text" asp-for="@Model.AccountNumber" id="AccountNumber" class="form-control" name="AccountNumber" placeholder="Account Number" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Beneficiary">Beneficiary Name</label>
+                                <input type="text" asp-for="@Model.BeneficiaryName" id="BeneficiaryName" class="form-control" name="BeneficiaryName" placeholder="Beneficiary Name" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Swift Code">Swift Code</label>
+                                <input type="text" asp-for="@Model.SwiftCode" id="SwiftCode" name="SwiftCode" class="form-control" placeholder="Swift Code" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Bank Name">Bank Name</label>
+                                <input type="text" asp-for="@Model.BankName" id="BankName" name="BankName" class="form-control" placeholder="Bank Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" id="Date" name="Date" class="form-control" name="Date" />
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Amount">Amount</label>
+                                <input type="number" asp-for="@Model.Amount" id="Amount" class="form-control" name="Amount" placeholder="Amount" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="PhoneNumber">Phone Number</label>
+                                <input type="text" asp-for="@Model.PhoneNumber" id="PhoneNumber" class="form-control" name="PhoneNumber" placeholder="Phone Number" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onClick="saveForm()">Save changes</button>
+            </div>
+        </div>
+    </div>*@
+

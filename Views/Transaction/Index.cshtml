@@ -1,0 +1,167 @@
+﻿
+@model AllCrud.Models.Transaction
+<style>
+    .page-title {
+        color: #1f1f1f;
+        font-size: 22px;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .page-header {
+        margin-bottom: 0.875rem;
+    }
+
+    .toast {
+        opacity: 1 !important;
+    }
+</style>
+@{
+    ViewData["Title"] = "Transactions";
+}
+
+<h3 class="text-center"><i class="fas fa-comment-dollar text-success"></i>Transaction History</h3>
+<div class="container">
+   
+    <button type="button" class="btn btn-primary rounded-0" data-toggle="modal" data-target="#myModal">
+        <i class="fa fa-plus"></i> Add
+    </button>
+    <div id="tbod"></div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">List</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive m-t-40">
+                    <table id="trTable" class="table table-bordered table-striped dataTable no-footer" cellspacing="0">
+                        <thead>
+                            <tr>
+                               <th>Id</th>
+                                <th>AccountNumber</th>
+                                <th>BankName</th>
+                                <th>BeneficiaryName</th>
+                                <th>SwiftCode</th>
+                                <th>Amount</th>
+                                <th>PhoneNumber</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal popup form -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title text-center">Modal title</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CreateEdit", "Employee", FormMethod.Post, new { id = "frmEmployee", @class = "form-material m-t-40" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+                    
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>A/c Number</label>
+                                @Html.TextBoxFor(model=>model.AccountNumber, new { @class = "form-control form-control-line", id = "accountNumber", placeholder = "A/cnumber", required = "required", title = "Employee" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                    @Html.TextBoxFor(m => m.BankName, new { @class = "form-control form-control-line", id = "bankName", placeholder = "bank name", required = "required", title = "mobile_no" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Beneficiary Name</label>
+                                @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control form-control-line", id="beneficiaryName", placeholder="beneficiary", required = "required", title = "beneficiaryName" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Swift Code</label>
+                                @Html.TextBoxFor(m => m.SwiftCode, new { @class = "form-control form-control-line", id="swiftCode", placeholder="Swift Code", required = "required", title = "Swift Code" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Amount</label>
+                                @Html.TextBoxFor(m => m.Amount, new { @class = "form-control form-control-line", id = "amount", placeholder = "amount", required = "required", title = "amount" })
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control form-control-line", id = "phoneNumber", placeholder = "Phone Number", required = "required", title = "amount" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <button type="button" id="btnAdd" onclick="btnSave()" class="btn waves-effect waves-light btn-primary">Submit</button>
+                    <button type="button" id="btnUpdate" onclick="Update()" class="btn waves-effect waves-light btn-primary">Update</button>
+                    <button class="btn waves-effect waves-light btn-secondary" onclick="Cancel()" data-dismiss="modal" data-toggle="quickview" aria-hidden="true">cancel</button>
+
+                }
+            </div>
+            @*<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@*<partial name="~/Views/Transaction/ViewPartial.cshtml"/>*@
+
+@*<table class="table table-striped table-bordered" id="transactionTable" style="width:100%">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>@Html.DisplayNameFor(m => m.AccountNumber)</th>
+            <th>@Html.DisplayNameFor(m => m.BankName)</th>
+            <th>@Html.DisplayNameFor(m => m.BeneficiaryName)</th>
+            <th>@Html.DisplayNameFor(m =>m.SwiftCode)</th>
+            
+            <th>@Html.DisplayNameFor(m =>m.Amount)</th>
+            <th>@Html.DisplayNameFor(m =>m.PhoneNumber)</th>
+            
+            <th>
+                <a class="btn btn-success btn-sm rounded-0" onClick="createNew(); return false;">
+                    <i class="fas fa-random"></i> 
+                    <span class="text-white">New Transaction</span>
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>*@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"/>
+
+@section Scripts{
+        <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
+        <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+        <script src="~/lib/toastr.js/toastr.min.js"></script>
+}
