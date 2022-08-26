@@ -1,6 +1,15 @@
 ﻿$(document).ready(() => {
     $('#btnUpdate').hide();
     $('#DivIsActive').hide();
+    
+
+    $(".show-modal").click(function () {
+        $("#myModal").modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    });
+    
     clearAll();
     bindDataTable();
     
@@ -22,6 +31,7 @@ const clearAll = () => {
 
 const btnSave = () => {
     isProcesseed = true;
+
     if (isProcesseed) {
         var transaction = {
             id: $("#id").val(),
@@ -128,19 +138,37 @@ const getbyID = (Id) => {
 }
 
 const Delete = (ID) => {
-    var ans = confirm("Are you sure you want to delete this Record?");
-    if (ans) {
-        $.ajax({
-            url: "transaction/Delete/" + ID,
-            type: "POST",
-            contentType: "application/json;charset=UTF-8",
-            dataType: "json",
-            success: function (result) {
-                bindDataTable();
-            },
-            error: function () {
-                toastr.error("An error has occured", "Error Alert", { timeout: 3000, closeButton: true });
-            }
-        });
-    }
+
+    swal({
+        text: "Are you sure you wan to delete",
+        icon: 'error',
+        closeOnClickOutside: false,
+        buttons: true,
+        showCancelButton: true,
+        dangerMode: true
+    }).then((result) => {
+        if (result) {
+            $.ajax({
+                url: "transaction/Delete/" + ID,
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    bindDataTable();
+                    swal({
+                        icon: "success",
+                        text: "Deleted successfully"
+                   
+                    });
+                },
+                error: function () {
+                    toastr.error("An error has occured", "Error Alert", { timeout: 3000, closeButton: true });
+                }
+            });
+        }
+    })
+
 }
+
+
+
