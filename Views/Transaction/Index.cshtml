@@ -1,21 +1,6 @@
 ﻿
 @model AllCrud.Models.Transaction
-<style>
-    .page-title {
-        color: #1f1f1f;
-        font-size: 22px;
-        font-weight: 500;
-        margin-bottom: 5px;
-    }
 
-    .page-header {
-        margin-bottom: 0.875rem;
-    }
-
-    .toast {
-        opacity: 1 !important;
-    }
-</style>
 @{
     ViewData["Title"] = "Transactions";
 }
@@ -41,9 +26,7 @@
                         <thead>
                             <tr>
                                <th>Id</th>
-                                <th>AccountNumber</th>
                                 <th>BankName</th>
-                                <th>BeneficiaryName</th>
                                 <th>SwiftCode</th>
                                 <th>Amount</th>
                                 <th>PhoneNumber</th>
@@ -69,44 +52,35 @@
                 </button>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("CreateEdit", "Employee", FormMethod.Post, new { id = "frmEmployee", @class = "form-material m-t-40" }))
+                @using (Html.BeginForm("CreateEdit", "Transaction", FormMethod.Post, new { id = "frmTransaction", @class = "form-material m-t-40" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Id)
                     
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>A/c Number</label>
-                                @Html.TextBoxFor(model=>model.AccountNumber, new { @class = "form-control form-control-line", id = "accountNumber", placeholder = "A/cnumber", required = "required", title = "Employee" })
-                            </div>
-                        </div>
-                        <div class="col-md-12">
+                        
+                        <div class="col-md-6">
+                            <input type="hidden" id="id" asp-for="@Model.Id" />
                             <div class="form-group">
                                 <label>Bank Name</label>
-                    @Html.TextBoxFor(m => m.BankName, new { @class = "form-control form-control-line", id = "bankName", placeholder = "bank name", required = "required", title = "mobile_no" })
+                            @Html.TextBoxFor(m => m.BankName, new { @class = "form-control form-control-line", id = "bankName", placeholder = "bank name", required = "required", title = "mobile_no" })
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Beneficiary Name</label>
-                                @Html.TextBoxFor(m => m.BeneficiaryName, new { @class = "form-control form-control-line", id="beneficiaryName", placeholder="beneficiary", required = "required", title = "beneficiaryName" })
-                            </div>
-                        </div>
-                        <div class="col-md-12">
+                        
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Swift Code</label>
                                 @Html.TextBoxFor(m => m.SwiftCode, new { @class = "form-control form-control-line", id="swiftCode", placeholder="Swift Code", required = "required", title = "Swift Code" })
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Amount</label>
                                 @Html.TextBoxFor(m => m.Amount, new { @class = "form-control form-control-line", id = "amount", placeholder = "amount", required = "required", title = "amount" })
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Phone Number</label>
                                 @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control form-control-line", id = "phoneNumber", placeholder = "Phone Number", required = "required", title = "amount" })
@@ -116,10 +90,12 @@
 
                     <div class="clearfix"></div>
 
-                    <button type="button" id="btnAdd" onclick="btnSave()" class="btn waves-effect waves-light btn-primary">Submit</button>
-                    <button type="button" id="btnUpdate" onclick="Update()" class="btn waves-effect waves-light btn-primary">Update</button>
-                    <button class="btn waves-effect waves-light btn-secondary" onclick="Cancel()" data-dismiss="modal" data-toggle="quickview" aria-hidden="true">cancel</button>
+                    <div style="display:flex; align-items:right;justify-content:end;">
+                        <button type="button" id="btnAdd" onclick="btnSave()" class="btn waves-effect waves-light btn-primary rounded-0">Submit</button>
+                        <button type="button" id="btnUpdate" onclick="Update()" class="btn waves-effect waves-light btn-primary rounded-0">Update</button>
+                        <button class="btn waves-effect waves-light btn-secondary ml-1 rounded-0" onclick="Cancel()" data-dismiss="modal" data-toggle="quickview" aria-hidden="true">cancel</button>
 
+                    </div>
                 }
             </div>
             @*<div class="modal-footer">

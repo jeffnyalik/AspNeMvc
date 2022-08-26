@@ -1,55 +1,76 @@
 ﻿$(document).ready(() => {
     $('#btnUpdate').hide();
     $('#DivIsActive').hide();
+    clearAll();
     bindDataTable();
     
 });
 
-const loadData = () => {
-    var transactions = [];
-
-    $.ajax({
-        type: "post",
-        async: false,
-        url: "transaction/List",
-        data: {},
-        success(data) {
-            if (data != null) {
-                $.each(data, function (key, value) {
-                    var editButton = "<a onclick='functionEdit('" + value.Id + "') style='cursor:pointer;color:#1da1f2;'><i class='fas fa-pencil fa-sm'></i></a>"
-                    var deleteButton = "<a style='cursor:pointer;' onclick='functionDelete(this)' class='text-danger'><i class='fas fa-trash fa-sm' aria-hidden='true'></i></a>"
-                    var hidden = "<input type='hidden' id='hdncode' value='" + value.id + "' />";
-                    //var action = hidden + editButton + ' | ' + deleteButton;
-                    var action = editButton + ' | ' + deleteButton;
-                    transactions.push([
-
-                        value.accNumber,
-                        value.bankName,
-                        value.benfName,
-                        value.swiftCode,
-                        value.amount,
-                        value.phoneNumber,
-                        action
-                    ]);
-                });
-            }
-        },
-        error(err) { }
-    });
+const Cancel = () => {
+    clearAll();
+    $('#btnUpdate').hide();
+    $('#btnAdd').show();
 }
+
+const clearAll = () => {
+    $("#id").val("");
+    $("#bankName").val("");
+    $("#swiftCode").val("");
+    $("#amount").val("");
+    $("#phoneNumber").val("");
+}
+
+const btnSave = () => {
+    isProcesseed = true;
+    if (isProcesseed) {
+        var transaction = {
+            id: $("#id").val(),
+            bankName:$("#bankName").val(),
+            swiftCode:$("#swiftCode").val(),
+            amount:$("#amount").val(),
+            phoneNumber:$("#phoneNumber").val()
+        }
+
+        $.ajax({
+            type: "post",
+            url: "/transaction/CreateEdit",
+            datatype: "json",
+            data: transaction,
+            success(data) {
+                if (data) {
+                    console.log(data);
+                    clearAll();
+                    $("#myModal").modal("hide");
+                    bindDataTable();
+                    toastr.success(data.message, "Success Alert", { timeout: 3000, closeButton: true });
+                } else {
+                    console.log("Error information")
+                    toastr.info(data.message, "Info Alert", { timeout: 3000, closeButton: true });
+                }
+            }, error(err) {
+                console.log(err);
+            }
+        })
+    }
+}
+
 
 const bindDataTable = () => {
     var table = $("#trTable").DataTable();
-    var i = 1;
     table.destroy();
+    var i = 1;
+    
     $("#trTable").DataTable({
         "ordering": true,
+        /*"destroy": true,
+        "searching": true,*/
         buttons: ['csv', 'copy', 'excel', 'print'],
         "ajax": {
             type: "get",
-            url: "/transaction/LoadData",
+            url: "transaction/LoadData",
             datatype: "json",
             dataSrc: "",
+            async: false,
             data: { id: "0" },
             
         },
@@ -59,9 +80,8 @@ const bindDataTable = () => {
                 "render": function (data, type, full, meta) { return i++; }
             },
             
-            { data: "accountNumber", autoWidth: true },
+            
             { data: "bankName", autoWidth: true },
-            { data: "beneficiaryName", autoWidth: true },
             { data: "swiftCode", autoWidth: true },
             { data: "amount", autoWidth: true },
             { data: "phoneNumber", autoWidth: true },
@@ -77,22 +97,25 @@ const bindDataTable = () => {
 
 
 const getbyID = (Id) => {
-    $("#Id").val(Id);
+    $("#id").val(Id);
     $.ajax({
         url: "/transaction/Edit/" + Id,
         type: "GET",
         contentType: "application/json;charset=UTF-8",
         dataType: "json",
         success: (data) => {
-            $("#accountNumber").val(data.accountNumber);
-            $("#bankName").val(data.bankName);
-            $("#beneficiaryName").val(data.beneficiaryName);
-            $("#swiftCode").val(data.swiftCode);
-            $("#amount").val(data.amount);
-            $("#phoneNumber").val(data.phoneNumber);
-            $('#myModal').modal('show');
-            $('#btnUpdate').show();
-            $('#btnAdd').hide();
+            if (data != null) {
+                $("#id").val(data.id);
+                $("#bankName").val(data.bankName);
+                $("#swiftCode").val(data.swiftCode);
+                $("#amount").val(data.amount);
+                $("#phoneNumber").val(data.phoneNumber);
+                $('#myModal').modal('show');
+                $('#btnUpdate').hide();
+                $('#btnAdd').show();
+
+                console.log(data);
+            }
         },
 
         error: (err) => {
@@ -104,149 +127,20 @@ const getbyID = (Id) => {
     return false;
 }
 
-/*
-$(document).ready(() => {
-    loadData();
-});
-
-const createNew = () => {
-    clearAll();
-    $("#btnModel").trigger("click");
-};
-
-
-
-
-
-const functionEdit = () => {
-   console.log("WORKING")
-}
-
-
-const functionDelete = () => {
-    console.log("DELETED");
-}
-
-
-
-const clearAll = () => {
-    $("#AccountNumber").val('');
-    $("#BeneficiaryName").val('');
-    $("#SwiftCode").val('');
-    $("#BankName").val('');
-    $("#Amount").val('');
-    $("#PhoneNumber").val('');
-}
-
-
-const loadData = () => {
-    var transactions = [];
-
-    $.ajax({
-        type: "post",
-        async: false,
-        url: "transaction/GetTransactions",
-        data: {},
-        success(data) {
-            if (data != null) {
-                $.each(data, function (key, value) {
-                    var editButton = "<a onclick='functionEdit('"+ value.Id +"') style='cursor:pointer;color:#1da1f2;'><i class='fas fa-pencil fa-sm'></i></a>"
-                    var deleteButton = "<a style='cursor:pointer;' onclick='functionDelete(this)' class='text-danger'><i class='fas fa-trash fa-sm' aria-hidden='true'></i></a>"
-                    var hidden = "<input type='hidden' id='hdncode' value='" + value.id + "' />";
-                    //var action = hidden + editButton + ' | ' + deleteButton;
-                    var action = editButton + ' | ' + deleteButton;
-                    transactions.push([
-                        
-                        value.accNumber,
-                        value.bankName,
-                        value.benfName,
-                        value.swiftCode,
-                        value.amount,
-                        value.phoneNumber,
-                        action
-                    ]);
-                });
-            }
-        },
-        error(err) { }
-    });
-
-
-    function bindDatatable() {
-
-    }
-
-    $("#transactionTable").DataTable({
-       *//* "ajax": {
-            type: "GET",
-            async: false,
-            url: "transaction/GetTransactions",
-            datatype: "json",
-            data: {},
-            success(data) {
-                //
-            }, error(err) { }
-        },*//*
-        destroy: true,
-        data: transactions,
-       *//* "columns": [
-            {data: "#"},
-            { data: "AccountNumber" },
-            { data: "Bank Name" },
-            { data: "Beneficiary Name" },
-            { data: "Swift Code" },
-            { data: "Amount" },
-            { data: "Phone Number" },
-        ],*//*
-        "language": {
-            "emptyTable": "No data found,please click on Add New Button"
-        },
-        pageLength: 5,
-        lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 25, 50]],
-        columnDefs: [{
-            "defaultContent": "-",
-            "targets": "_all"
-        }]
-    });
-}
-
-const saveForm = () => {
-    var isProcessed = true;
-    if (isProcessed) {
-        var transactions = {
-            accNumber: $("#AccountNumber").val(),
-            benfName: $("#BeneficiaryName").val(),
-            swiftCode: $("#SwiftCode").val(),
-            bankName: $("#BankName").val(),
-            amount: $("#Amount").val(),
-            phoneNumber: $("#PhoneNumber").val()
-        }
-
-        console.log(transactions);
-
+const Delete = (ID) => {
+    var ans = confirm("Are you sure you want to delete this Record?");
+    if (ans) {
         $.ajax({
-            type: "post",
-            url: "transaction/save",
-            data: transactions,
-            success(data) {
-                if (data.success) {
-                    clearAll();
-                    loadData();
-                    toastr.success(data.message, "Success Alert", { timeout: 3000, closeButton: true });
-                    
-                } else {
-                    toastr.info("Info", "Information Alert", { timeout: 3000, closeButton: true });
-                    console.log(data);
-                }
+            url: "transaction/Delete/" + ID,
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (result) {
+                bindDataTable();
             },
-            error(err) {
-                toastr.error("Error", "Error Alert", { timeout: 3000, closeButton: true });
-                console.log(err);
+            error: function () {
+                toastr.error("An error has occured", "Error Alert", { timeout: 3000, closeButton: true });
             }
         });
     }
 }
-
-//var hidden = "<input id='hdncode' value='" + value.id + "' />";
-//var editButton = "<a href='#' onclick='functionEdit(this)' class='btn btn-info'><i class='fas fa-pencil'></i></a>"
-//var deleteButton = "<a href='#' onclick='functionEdit(this)' class='text-danger'><i class='fas fa-trash' aria-hidden='true'></i></a>"*/

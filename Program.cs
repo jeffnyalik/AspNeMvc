@@ -2,13 +2,21 @@ using AllCrud.Data.AppContext;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+});
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc(options => options.EnableEndpointRouting = false);
 builder.Services.AddDbContext<ProjectDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    var connections = builder.Configuration.GetConnectionString("LocalDbConnect");
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseMySql(connections, ServerVersion.AutoDetect(connections));
 });
 
 var app = builder.Build();
